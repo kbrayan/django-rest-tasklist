@@ -1,7 +1,7 @@
 from django.contrib.auth import get_user_model
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib import messages
-from django.shortcuts import get_object_or_404, redirect
+from django.shortcuts import get_object_or_404, Http404, redirect
 from tasklist.models import Task
 
 from rest_framework.views import APIView
@@ -65,11 +65,11 @@ class TaskCreateAPIView(CreateAPIView):
     renderer_classes = (TemplateHTMLRenderer,)
     template_name = 'tasklist/task-create-api.html'
 
-    def get(self):
+    def get(self, request, format=None):
         serializer = TaskCreateSerializer()
         return Response({'serializer': serializer})
 
-    def create(self, request):
+    def create(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         self.perform_create(serializer)
@@ -92,29 +92,28 @@ class TaskDetailAPIView(RetrieveAPIView):
     renderer_classes = (TemplateHTMLRenderer,)
     template_name = 'tasklist/task-detail-api.html'
 
-    def get(self):
-    #     print('task_obj')
+    def get(self, request, *args, **kwargs):
         task_obj = self.get_object()
         serializer = self.get_serializer(task_obj)
         return Response({'serializer': serializer, 'context': task_obj})
 
-    def get_object(self):
+    def get_object(self, *args, **kwargs):
         uuid = self.kwargs.get("uuid")
         return get_object_or_404(Task, uuid=uuid)
 
 
 class TaskUpdateAPIView(LoginRequiredMixin, RetrieveUpdateAPIView):
-    queryset = Task.objects.all()
+    queryset = Task.objects.all() #is_active
     serializer_class = TaskUpdateSerializer
     renderer_classes = (TemplateHTMLRenderer,)
     template_name = 'tasklist/task-update-api.html'
 
-    def retrieve(self):
+    def retrieve(self, request, *args, **kwargs):
         instance = self.get_object()
         serializer = self.get_serializer(instance)
         return Response({'serializer': serializer, 'instance': instance})
 
-    def get_object(self):
+    def get_object(self, *args, **kwargs):
         uuid = self.kwargs.get("uuid")
         return get_object_or_404(Task, uuid=uuid)
 
@@ -128,6 +127,7 @@ class TaskUpdateAPIView(LoginRequiredMixin, RetrieveUpdateAPIView):
             instance._prefetched_objects_cache = {}
         messages.success(request, 'Sua task foi atualizada')
         return Response({'serializer': serializer, 'instance': instance, 'messages': messages})
+        # return Response(serializer.data)
 
 
 class TaskDeleteAPIView(RetrieveDestroyAPIView):
@@ -136,7 +136,7 @@ class TaskDeleteAPIView(RetrieveDestroyAPIView):
     renderer_classes = (TemplateHTMLRenderer,)
     template_name = 'tasklist/task-delete-api.html'
 
-    def get_object(self):
+    def get_object(self, *args, **kwargs):
         uuid = self.kwargs.get("uuid")
         try:
             return Task.objects.get(uuid=uuid)
@@ -150,7 +150,7 @@ class TaskDeleteAPIView(RetrieveDestroyAPIView):
     def delete(self, request, *args, **kwargs):
         return self.destroy(request, *args, **kwargs)
 
-    def destroy(self, request):
+    def destroy(self, request, *args, **kwargs):
         try:
             instance = self.get_object()
             self.perform_destroy(instance)
