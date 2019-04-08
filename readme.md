@@ -28,7 +28,10 @@ The flag ```-d``` let you return to the terminal.
 Make sure you´re running a tty terminal, could be unix bash or powershell on Windows:
 
 ```
-docker exec -it django-admin bash
+docker exec -it [CONTAINER-NAME] bash
+
+Probably: django-rest-tasklist_django_1
+docker exec -it django-rest-tasklist_django_1 bash
 ```
 Let´s make migrations and create the superuser:
 

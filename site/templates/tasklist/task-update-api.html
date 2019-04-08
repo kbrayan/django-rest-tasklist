@@ -6,43 +6,48 @@
 
 {% block head_title %}{% trans "Atualizar" %}{% endblock %}
 {% block header %}
-{%include 'webapp/snippets/header.html' %}
+    {%include 'webapp/snippets/header.html' %}
 {% endblock header %}
 {% block content %}
-<main>
-    <section class="container" style="min-height: 50vh">
-        <div class="row justify-content-center">
-            <div>
-                <header class="text-center mb-4">
-                    <h2>{% trans "Atualizar Task" %}</h2>
-                </header>
-                <!-- Form -->
-                <form action="{{ request.get_full_path }}" data-method="PUT" class='content-markdown'
-                      enctype="multipart/form-data" novalidate>
-                    {% csrf_token %}
-                    {% render_form serializer %}
-                    <input class='btn btn-primary' type='submit' value='Atualizar'>
-                </form>
-                <!-- End Form -->
-            </div>
+    <main>
+    <section class="container g-pt-20 g-pb-40" style="min-height: 50vh">
+      <div class="row justify-content-center">
+        <div class="col-sm-8 col-lg-6">
+          <div class="g-brd-around g-brd-gray-light-v4 rounded g-py-20 g-px-30">
+              <header class="text-center mb-4">
+              <h2 class="h2 g-color-black g-font-weight-600">{% trans "Atualizar Task" %}</h2>
+            </header>
+
+            <!-- Form -->
+            <form action="{{ request.get_full_path }}" data-method="PUT" class='content-markdown' enctype="multipart/form-data" novalidate>
+            <!--<form action="{{ request.get_full_path }}" data-method="PUT" class='content-markdown' enctype="multipart/form-data" novalidate>-->
+                {% csrf_token %}
+                {% render_form serializer %}
+                <input class='btn btn-primary' type='submit' value='Atualizar' >
+            </form>
+            <!-- End Form -->
+          </div>
         </div>
+      </div>
     </section>
 
-</main>
+    </main>
 {% endblock content %}
+
 {% block endjs %}
-    <script>
+      <script>
         window.drf = {
           csrfHeaderName: "{{ csrf_header_name|default:'X-CSRFToken' }}",
           csrfToken: "{% if request %}{{ csrf_token }}{% endif %}"
         };
-    </script>
-    <script src="{% static "rest_framework/js/ajax-form.js" %}"></script>
-    <script src="{% static "rest_framework/js/csrf.js" %}"></script>
-    <script src="{% static "rest_framework/js/default.js" %}"></script>
-    <script>
+      </script>
+      <script src="{% static "rest_framework/js/jquery-3.3.1.min.js" %}"></script>
+      <script src="{% static "rest_framework/js/ajax-form.js" %}"></script>
+      <script src="{% static "rest_framework/js/csrf.js" %}"></script>
+      <script src="{% static "rest_framework/js/default.js" %}"></script>
+      <script>
         $(document).ready(function() {
           $('form').ajaxForm();
         });
-    </script>
+      </script>
 {% endblock endjs %}

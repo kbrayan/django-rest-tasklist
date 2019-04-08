@@ -16,11 +16,17 @@ from rest_framework.generics import (
     ListCreateAPIView,
 )
 
+from rest_framework.permissions import (
+    AllowAny,
+    IsAuthenticated,
+    IsAdminUser,
+    IsAuthenticatedOrReadOnly,
+)
 from rest_framework.renderers import (
     TemplateHTMLRenderer,
     HTMLFormRenderer,
     BrowsableAPIRenderer,
-)
+    )
 
 from rest_framework.response import Response
 
@@ -30,15 +36,15 @@ from .serializers import (
     TaskDetailSerializer,
     TaskListSerializer,
     TaskDeleteSerializer,
-)
+    )
 
 User = get_user_model()
 
 
 class TaskListAPIView(APIView):
+    permission_classes = (IsAuthenticated,)
     renderer_classes = (TemplateHTMLRenderer,)
     template_name = 'tasklist/task-list-api.html'
-
     #
     def get(self, request):
         qs = Task.objects.all()
@@ -46,10 +52,11 @@ class TaskListAPIView(APIView):
         return Response({'serializer': serializer, 'tasks': qs})
 
 
-# Browsable API List
 class TaskAPIView(ListAPIView):
     queryset = Task.objects.all()
     serializer_class = TaskListSerializer
+    permission_classes = (IsAuthenticated,)
+
 
 
 class TaskCreateAPIView(CreateAPIView):
@@ -58,11 +65,11 @@ class TaskCreateAPIView(CreateAPIView):
     renderer_classes = (TemplateHTMLRenderer,)
     template_name = 'tasklist/task-create-api.html'
 
-    def get(self, request, format=None):
+    def get(self):
         serializer = TaskCreateSerializer()
         return Response({'serializer': serializer})
 
-    def create(self, request, *args, **kwargs):
+    def create(self, request):
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         self.perform_create(serializer)
@@ -73,7 +80,6 @@ class TaskCreateAPIView(CreateAPIView):
         return self.create(request, *args, **kwargs)
 
 
-# Browsable Create API
 class TaskCreate2APIView(CreateAPIView):
     queryset = Task.objects.all()
     serializer_class = TaskCreateSerializer
@@ -82,10 +88,12 @@ class TaskCreate2APIView(CreateAPIView):
 class TaskDetailAPIView(RetrieveAPIView):
     queryset = Task.objects.all()
     serializer_class = TaskDetailSerializer
+    # lookup_field = 'uuid'
     renderer_classes = (TemplateHTMLRenderer,)
     template_name = 'tasklist/task-detail-api.html'
 
     def get(self):
+    #     print('task_obj')
         task_obj = self.get_object()
         serializer = self.get_serializer(task_obj)
         return Response({'serializer': serializer, 'context': task_obj})
@@ -110,7 +118,7 @@ class TaskUpdateAPIView(LoginRequiredMixin, RetrieveUpdateAPIView):
         uuid = self.kwargs.get("uuid")
         return get_object_or_404(Task, uuid=uuid)
 
-    def update(self, request, **kwargs):
+    def update(self, request, *args, **kwargs):
         partial = kwargs.pop('partial', True)
         instance = self.get_object()
         serializer = self.get_serializer(instance, data=request.data, partial=partial)
@@ -128,7 +136,7 @@ class TaskDeleteAPIView(RetrieveDestroyAPIView):
     renderer_classes = (TemplateHTMLRenderer,)
     template_name = 'tasklist/task-delete-api.html'
 
-    def get_object(self, *args, **kwargs):
+    def get_object(self):
         uuid = self.kwargs.get("uuid")
         try:
             return Task.objects.get(uuid=uuid)
@@ -142,7 +150,7 @@ class TaskDeleteAPIView(RetrieveDestroyAPIView):
     def delete(self, request, *args, **kwargs):
         return self.destroy(request, *args, **kwargs)
 
-    def destroy(self, request, *args, **kwargs):
+    def destroy(self, request):
         try:
             instance = self.get_object()
             self.perform_destroy(instance)
