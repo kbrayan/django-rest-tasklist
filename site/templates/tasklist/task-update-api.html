@@ -1,0 +1,48 @@
+{% extends 'webapp/base.html' %}
+{% load staticfiles %}
+{% load crispy_forms_tags %}
+{% load i18n %}
+{% load rest_framework %}
+
+{% block head_title %}{% trans "Atualizar" %}{% endblock %}
+{% block header %}
+{%include 'webapp/snippets/header.html' %}
+{% endblock header %}
+{% block content %}
+<main>
+    <section class="container" style="min-height: 50vh">
+        <div class="row justify-content-center">
+            <div>
+                <header class="text-center mb-4">
+                    <h2>{% trans "Atualizar Task" %}</h2>
+                </header>
+                <!-- Form -->
+                <form action="{{ request.get_full_path }}" data-method="PUT" class='content-markdown'
+                      enctype="multipart/form-data" novalidate>
+                    {% csrf_token %}
+                    {% render_form serializer %}
+                    <input class='btn btn-primary' type='submit' value='Atualizar'>
+                </form>
+                <!-- End Form -->
+            </div>
+        </div>
+    </section>
+
+</main>
+{% endblock content %}
+{% block endjs %}
+    <script>
+        window.drf = {
+          csrfHeaderName: "{{ csrf_header_name|default:'X-CSRFToken' }}",
+          csrfToken: "{% if request %}{{ csrf_token }}{% endif %}"
+        };
+    </script>
+    <script src="{% static "rest_framework/js/ajax-form.js" %}"></script>
+    <script src="{% static "rest_framework/js/csrf.js" %}"></script>
+    <script src="{% static "rest_framework/js/default.js" %}"></script>
+    <script>
+        $(document).ready(function() {
+          $('form').ajaxForm();
+        });
+    </script>
+{% endblock endjs %}

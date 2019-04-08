@@ -1,0 +1,29 @@
+{% extends 'webapp/base.html' %}
+{% block head_title %}{{ block.super }}{% endblock head_title%}
+
+{% block header %}
+    {%include 'webapp/snippets/header.html' %}
+{% endblock header %}
+
+{% block content %}
+
+<div class="container jumbotron text-center">
+  <h1>Tasklist</h1>
+  <p></p>
+</div>
+
+
+<div class="container">
+    <h2>
+        Tasklist
+    </h2>
+    </br>
+    {% if request.user.is_authenticated %}
+    <p>Olá usuário <b>{% if user.username == None %}UserX{% else %}{{ user.username }}{% endif %}</b></p>
+    {% else %}
+    <p>Faça o Login para obter acesso.</p>
+    {% endif %}
+</div>
+
+
+{% endblock content %}

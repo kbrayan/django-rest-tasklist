@@ -1,0 +1,32 @@
+{% extends 'webapp/base.html' %}
+{% load staticfiles %}
+{% block head_title %}{{ block.super }}{% endblock head_title%}
+{% block header %}
+{%include 'webapp/snippets/header.html' %}
+{% endblock header %}
+
+{% block content %}
+
+<section class="container" style="min-height: 50vh">
+    <div class="jumbotron">
+        <h1>{{ context.taskname }}</h1>
+        <p>Descrição: {{ context.description }}</p>
+
+        <p>Conteúdo: {{ context.content }}</p>
+        <p>Finaliza em: {{ context.due_date }}</p>
+        <p>Finalizado?
+            {% if context.finished == False %}
+            <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
+            {% else %}
+            <span class="glyphicon glyphicon-ok" aria-hidden="true"></span>
+            {% endif %}
+        </p>
+        <p>Última atualização: {{ context.updated }}</p>
+        <p>Data de criação: {{ context.created }}</p>
+        <p><a href="{% url 'tasklist-api:updateUUID' context.uuid %}" role="button" class="btn btn-primary btn-lg">Update
+            Task</a></p>
+        <p><a href="{% url 'tasklist-api:deleteUUID' context.uuid %}" role="button" class="btn btn-primary btn-lg">Apagar
+            Task</a></p>
+    </div>
+</section>
+{% endblock content %}

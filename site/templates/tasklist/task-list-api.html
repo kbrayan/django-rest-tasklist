@@ -1,0 +1,59 @@
+{% extends 'webapp/base.html' %}
+{% load staticfiles %}
+{% load crispy_forms_tags %}
+{% load rest_framework %}
+
+{% block header %}
+{%include 'webapp/snippets/header.html' %}
+{% endblock header %}
+
+{% block content %}
+<main>
+    <section class="container-fluid" style="min-height: 50vh">
+        {% for task in tasks %}
+        <div class="panel panel-default">
+            <!-- Default panel contents -->
+            <div class="panel-heading"><a href="{% url 'tasklist-api:detailUUID' task.uuid %}">{{ task.taskname }}</a>
+            </div>
+            <div class="panel-body">
+                <p>Descrição: {{ task.description }}</p>
+            </div>
+
+            <!-- List group -->
+            <ul class="list-group">
+                <li class="list-group-item">Conteúdo: {{ task.content }}</li>
+                <li class="list-group-item">Terminou?
+                    {% if task.finished == False %}
+                    <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
+                    {% else %}
+                    <span class="glyphicon glyphicon-ok" aria-hidden="true"></span>
+                    {% endif %}
+                </li>
+                <li class="list-group-item">Atualizado em: {{ task.updated }}</li>
+                <li class="list-group-item">Finaliza em: {{ task.due_date }}</li>
+                <li class="list-group-item">Criado em: {{ task.created }}</li>
+                <li class="list-group-item"><a href="{% url 'tasklist-api:updateUUID' task.uuid %}">Editar</a></li>
+                <li class="list-group-item"><a href="{% url 'tasklist-api:deleteUUID' task.uuid %}">Apagar</a></li>
+            </ul>
+        </div>
+        {% endfor %}
+    </section>
+</main>
+{% endblock content %}
+
+{% block endjs %}
+    <script>
+        window.drf = {
+          csrfHeaderName: "{{ csrf_header_name|default:'X-CSRFToken' }}",
+          csrfToken: "{% if request %}{{ csrf_token }}{% endif %}"
+        };
+    </script>
+    <script src="{% static "rest_framework/js/ajax-form.js" %}"></script>
+    <script src="{% static "rest_framework/js/csrf.js" %}"></script>
+    <script src="{% static "rest_framework/js/default.js" %}"></script>
+    <script>
+        $(document).ready(function() {
+          $('form').ajaxForm();
+        });
+    </script>
+{% endblock endjs %}

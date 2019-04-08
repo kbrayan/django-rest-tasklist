@@ -1,0 +1,17 @@
+version: "3.4"
+
+services:
+    django:
+      image: site
+      build:
+        context: .
+        dockerfile: Dockerfile
+        labels:
+          application.description: "Aplicativo Task list"
+        args:
+          PROJECT: site
+      networks:
+        - task-net
+
+networks:
+    task-net:

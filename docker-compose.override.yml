@@ -1,0 +1,9 @@
+version: "3.4"
+
+services:
+    django:
+      volumes:
+        - ./site:/usr/src/app/
+        - ./nginx/static:/static/
+      ports:
+        - 3000:8001

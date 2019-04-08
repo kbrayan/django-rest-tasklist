@@ -1,0 +1,33 @@
+{% extends 'webapp/base.html' %}
+{% load crispy_forms_tags %}
+{% block head_title %}Login{% endblock %}
+{% block header %}
+{%include 'webapp/snippets/header.html' %}
+{% endblock header %}
+
+{% block content %}
+
+<!-- Login -->
+<section class="container" style="min-height: 50vh">
+    <div class="row justify-content-center">
+        <div>
+            <header class="text-center mb-4">
+                <h2">Login</h2>
+            </header>
+
+            <!-- Form -->
+            <form class="login" method="POST" action="{% url 'account_login' %}">
+                {% csrf_token %}
+                {{ form|crispy }}
+                {% if redirect_field_value %}
+                <input type="hidden" name="{{ redirect_field_name }}" value="{{ redirect_field_value }}"/>
+                {% endif %}
+                <button class="btn btn-md btn-block u-btn-primary g-py-13" type="submit">Entrar"</button>
+            </form>
+            <!-- End Form -->
+        </div>
+    </div>
+</section>
+<!-- End Login -->
+{% endblock %}
+

@@ -1,0 +1,8 @@
+Django>=1.11,<1.12
+django-environ
+django-allauth==0.38.0
+django_extensions
+djangorestframework==3.9.2
+requests==2.18.4
+markdown       # Markdown support for the browsable API.
+django-crispy-forms==1.7.0

@@ -1,0 +1,33 @@
+{% extends 'webapp/base.html' %}
+{% load crispy_forms_tags %}
+{% block head_title %}Login{% endblock %}
+{% block header %}
+{%include 'webapp/snippets/header.html' %}
+{% endblock header %}
+
+{% block content %}
+
+<!-- Logout -->
+<section class="container g-pt-20 g-pb-40" style="min-height: 50vh">
+    <div class="row justify-content-center">
+        <div class="col-sm-8 col-lg-6">
+            <div class="g-brd-around g-brd-gray-light-v4 rounded g-py-20 g-px-30">
+                <header class="text-center mb-4">
+                    <h2 class="h2 g-color-black g-font-weight-600">Logout</h2>
+                </header>
+
+                <!-- Form -->
+                <form class="login" method="POST" action="{% url 'account_logout' %}">
+                    {% csrf_token %}
+                    {{ form|crispy }}
+                    {% if redirect_field_value %}
+                    <input type="hidden" name="{{ redirect_field_name }}" value="{{ redirect_field_value }}"/>
+                    {% endif %}
+                    <button class="btn btn-md btn-block u-btn-primary g-py-13" type="submit">Sair</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</section>
+<!-- End Login -->
+{% endblock %}

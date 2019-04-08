@@ -1,0 +1,39 @@
+{% extends 'webapp/base.html' %}
+{% load staticfiles %}
+{% load crispy_forms_tags %}
+{% load i18n %}
+{% load rest_framework %}
+
+{% block head_title %}{% trans "Atualizar" %}{% endblock %}
+{% block header %}
+{%include 'webapp/snippets/header.html' %}
+{% endblock header %}
+{% block content %}
+<main>
+    <section class="container" style="min-height: 50vh">
+        <div class="row justify-content-center">
+            <form class="button-form" action="{{ request.get_full_path }}" data-method="delete" novalidate>
+                <button class="btn btn-danger">Delete</button>
+            </form>
+            <p></p>
+        </div>
+    </section>
+
+</main>
+{% endblock content %}
+{% block endjs %}
+    <script>
+        window.drf = {
+          csrfHeaderName: "{{ csrf_header_name|default:'X-CSRFToken' }}",
+          csrfToken: "{% if request %}{{ csrf_token }}{% endif %}"
+        };
+    </script>
+    <script src="{% static "rest_framework/js/ajax-form.js" %}"></script>
+    <script src="{% static "rest_framework/js/csrf.js" %}"></script>
+    <script src="{% static "rest_framework/js/default.js" %}"></script>
+    <script>
+        $(document).ready(function() {
+          $('form').ajaxForm();
+        });
+    </script>
+{% endblock endjs %}

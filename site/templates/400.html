@@ -1,0 +1,17 @@
+{% extends 'webapp/base.html' %}
+{% block head_title %}{{ block.super }}{% endblock head_title%}
+{% block header %}
+{%include 'webapp/snippets/header.html' %}
+{% endblock header %}
+
+{% block content %}
+
+<main>
+    <div class="text-center">
+        <br>
+        <h1>Ops, 400</h1>
+        <h2>Verifique os campos digitados.</h2>
+    </div>
+</main>
+
+{% endblock content %}
