@@ -3,6 +3,6 @@ django-environ
 django-allauth==0.38.0
 django_extensions
 djangorestframework==3.9.2
-requests==2.18.4
+requests>=2.20.0
 markdown       # Markdown support for the browsable API.
 django-crispy-forms==1.7.0
